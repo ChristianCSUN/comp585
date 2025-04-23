@@ -1,5 +1,6 @@
 {
     "notebook.formatOnSave.enabled": false,
     "editor.formatOnSave": false,
-    "editor.fontVariations": false
+    "editor.fontVariations": false,
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:stockappflutter/components/my_button.dart';
 import 'package:stockappflutter/pages/signup_page.dart';
 import '../components/custom_text_field.dart';
+import 'package:stockappflutter/main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -30,6 +31,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void dispose() {
     timer.cancel();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -40,14 +43,23 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void signUserIn() async {
-    showDialog(
+    /*showDialog(
       context: context,
       builder: (context) {
         return const Center(
           child: CircularProgressIndicator(),
         );
       },
+    );*/
+
+    OverlayEntry loadingIndicator = OverlayEntry(
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
     );
+
+    navigatorKey.currentState?.overlay?.insert(loadingIndicator);
+
     print('Sign in button pressed');
     print('Email: ${emailController.text}');
     print('Password: ${passwordController.text}');
@@ -57,15 +69,26 @@ class _LoginPageState extends State<LoginPage> {
         email: emailController.text,
         password: passwordController.text,
       );
+      
+      loadingIndicator.remove();
+
+      navigatorKey.currentState?.pushNamedAndRemoveUntil(
+        '/home',
+        (route) => false,
+      );
+
+      
       print('Sign in successful');
     } on FirebaseAuthException catch (e) {
       print('Sign in failed: ${e.message}');
+
+      loadingIndicator.remove();
       setState(() {
         errorMessage = e.message!;
       });
     }
     print('Sign in process completed');
-    Navigator.pop(context);
+    //Navigator.pop(context);
   }
 
   void resetPassword() async {
