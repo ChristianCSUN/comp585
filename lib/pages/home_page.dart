@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:stockappflutter/main.dart';
 import 'package:stockappflutter/marketstack_service.dart';
 import 'package:stockappflutter/components/menu_drawer.dart';
 import 'package:stockappflutter/components/market_card.dart';
@@ -31,15 +30,7 @@ class _HomePageState extends State<HomePage>{
 
   Future<List<MarketData>> fetchMarkets() async {
     final markets = await MSS.fetchPopularMarkets();
-    return markets.map((market) => MarketData.fromApi(market, market["graphData"])).toList();
-  }
-
-  void signUserOut(BuildContext context) async {
-    await FirebaseAuth.instance.signOut();
-    navigatorKey.currentState!.pushNamedAndRemoveUntil(
-      '/',
-      (route) => false,
-    );
+    return markets.map((market) => MarketData.fromApi(market)).toList();
   }
 
   @override
@@ -65,7 +56,7 @@ class _HomePageState extends State<HomePage>{
           ),
         ),
       ),
-      endDrawer: MenuDrawer(signUserOut: signUserOut),
+      endDrawer: MenuDrawer(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

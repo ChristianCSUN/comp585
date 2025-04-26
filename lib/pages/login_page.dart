@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stockappflutter/components/my_button.dart';
 import 'package:stockappflutter/pages/signup_page.dart';
+import 'package:stockappflutter/utilities/auth_utils.dart';
 import '../components/custom_text_field.dart';
 import 'package:stockappflutter/main.dart';
 
@@ -42,16 +42,8 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void signUserIn() async {
-    /*showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );*/
 
+  void signUserIn() async {
     OverlayEntry loadingIndicator = OverlayEntry(
       builder: (context) => const Center(
         child: CircularProgressIndicator(),
@@ -64,31 +56,23 @@ class _LoginPageState extends State<LoginPage> {
     print('Email: ${emailController.text}');
     print('Password: ${passwordController.text}');
     print('Sign in started');
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-      
-      loadingIndicator.remove();
 
+    final message = await logUserIn(emailController.text, passwordController.text);
+
+    loadingIndicator.remove();
+    if(message == null){
       navigatorKey.currentState?.pushNamedAndRemoveUntil(
         '/home',
         (route) => false,
       );
-
-      
-      print('Sign in successful');
-    } on FirebaseAuthException catch (e) {
-      print('Sign in failed: ${e.message}');
-
-      loadingIndicator.remove();
-      setState(() {
-        errorMessage = e.message!;
+    }else{
+      print('Sign in failed: $message');
+      setState((){
+        errorMessage = message;
       });
     }
+
     print('Sign in process completed');
-    //Navigator.pop(context);
   }
 
   void resetPassword() async {
@@ -98,16 +82,13 @@ class _LoginPageState extends State<LoginPage> {
       });
       return;
     }
-    try {
-      await FirebaseAuth.instance
-          .sendPasswordResetEmail(email: emailController.text);
-      setState(() {
-        errorMessage = 'Password reset email sent';
-      });
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorMessage = e.message!;
-      });
+
+    final message = await resetUserPassword(emailController.text);
+
+    if(message == null){
+      errorMessage = 'Password reset email sent';
+    }else{
+      errorMessage = message;
     }
   }
 
@@ -126,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.only(bottom: 150), // Add padding here
+              padding: const EdgeInsets.only(bottom: 150),
               child: Column(
                 children: [
                   const SizedBox(height: 50),

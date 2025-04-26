@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:stockappflutter/main.dart';
+import 'package:stockappflutter/utilities/auth_utils.dart';
 
 class MenuDrawer extends StatelessWidget{
-  final void Function(BuildContext) signUserOut;
-  const MenuDrawer({super.key, required this.signUserOut});
-
-   
-
+  const MenuDrawer({super.key});
+  
   @override
   Widget build(BuildContext context){
     List<Color> colors = [Colors.blue, Colors.purple];
@@ -38,7 +37,7 @@ class MenuDrawer extends StatelessWidget{
                 ),
                 onTap: (){
                   print("Dashboard was pressed");
-                    Navigator.pop(context);
+                  navigatorKey.currentState!.pushNamedAndRemoveUntil('/home',(route) => false);
                 },
               ),
               Spacer(),
@@ -93,7 +92,7 @@ class MenuDrawer extends StatelessWidget{
                   "Signout",
                   style: TextStyle(color: Colors.white),
                 ),
-                onTap: () => signUserOut(context),
+                onTap: () => signUserOut(),
               ),
               Spacer(),
             ]

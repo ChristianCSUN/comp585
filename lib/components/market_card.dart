@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:stockappflutter/main.dart';
 import 'package:stockappflutter/components/market_data.dart';
+import 'package:stockappflutter/pages/stats.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class MarketCard extends StatefulWidget {
   final MarketData market;
@@ -24,6 +27,10 @@ class MarketCardState extends State<MarketCard> {
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
             debugPrint('Card Tapped.');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Stats(market: widget.market))
+            );
           },
           child: Ink(
             decoration: BoxDecoration(
@@ -46,27 +53,31 @@ class MarketCardState extends State<MarketCard> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            widget.market.name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          widget.market.symbol,
+                        AutoSizeText(
+                          widget.market.name,
                           style: const TextStyle(
-                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
+                          maxFontSize: 20,
+                          minFontSize: 10,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        AutoSizeText(
+                          widget.market.symbol,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                            maxFontSize: 20,
+                            minFontSize: 10,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                         ),
                       ]
                     ),
-                    SizedBox(width: 50),
+                    SizedBox(width: 25),
                     SizedBox(
                       width: 50,
                       height: 50,
@@ -74,37 +85,45 @@ class MarketCardState extends State<MarketCard> {
                         painter: MiniGraphPainter(widget.market.graphData),
                       ),
                     ),
+                    SizedBox(width: 25),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
+                        AutoSizeText(
                           "${widget.market.percentageChange}%",
                           style: TextStyle(
-                            fontSize: 16,
                             color: widget.market.percentageChange > 0 ? Colors.green : Colors.red,
                           ),
+                          maxFontSize: 20,
+                          minFontSize: 10,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        Text(
+                        AutoSizeText(
                           "\$${widget.market.currentValue.toStringAsFixed(2)}",
                           style: TextStyle(
-                            fontSize: 16,
                             color: Colors.white,
-                          ), 
+                          ),
+                          maxFontSize: 20,
+                          minFontSize: 10,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ]
                     ),
                     IconButton(
-                      icon: toggle ? Icon(
-                        Icons.star_outlined,
+                      icon: Icon(
+                        // filled in star
+                         toggle ? Icons.star_outlined : Icons.star_outline,
                         color: Colors.yellow,
                         size: 30,
-                      )
-                      : Icon(
+                      ),
+                      /*: Icon(
                           Icons.star_outline,
                           color: Colors.yellow,
                           size: 30,
-                        ),
+                        ),*/
                       tooltip: "Add to Favorites",
                       onPressed: (){
                         setState((){
