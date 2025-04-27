@@ -52,6 +52,7 @@ class MenuDrawer extends StatelessWidget{
                 ),
                 onTap: (){
                   print("Favorites was pressed");
+                  navigatorKey.currentState!.pushNamed('/favorites');
                 },
               ),
               Spacer(),

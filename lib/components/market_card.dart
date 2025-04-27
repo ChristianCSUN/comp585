@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:stockappflutter/main.dart';
 import 'package:stockappflutter/components/market_data.dart';
 import 'package:stockappflutter/pages/stats.dart';
+import 'package:stockappflutter/utilities/database_utils.dart';
+
 import 'package:auto_size_text/auto_size_text.dart';
 
 class MarketCard extends StatefulWidget {
@@ -15,7 +16,22 @@ class MarketCard extends StatefulWidget {
 class MarketCardState extends State<MarketCard> {  
   bool toggle = false;
   List<Color> colors = [Colors.blue, Colors.purple];
- 
+  
+  @override
+  void initState(){
+    super.initState();
+    checkFavorite();
+  }
+
+  Future<void> checkFavorite() async{
+    bool result = await isFavorite(widget.market.symbol);
+    if(mounted){
+      setState(() {
+        toggle = result;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context){
     return Center(
@@ -114,21 +130,16 @@ class MarketCardState extends State<MarketCard> {
                     ),
                     IconButton(
                       icon: Icon(
-                        // filled in star
                          toggle ? Icons.star_outlined : Icons.star_outline,
                         color: Colors.yellow,
                         size: 30,
                       ),
-                      /*: Icon(
-                          Icons.star_outline,
-                          color: Colors.yellow,
-                          size: 30,
-                        ),*/
                       tooltip: "Add to Favorites",
                       onPressed: (){
                         setState((){
                           toggle = !toggle;
                         });
+                        toggle ? addFavorite(widget.market.name, widget.market.symbol) : removeFavorite(widget.market.symbol);
                       }
                     ),
                   ],

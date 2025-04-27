@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stockappflutter/marketstack_service.dart';
 import 'package:stockappflutter/components/menu_drawer.dart';
@@ -16,7 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage>{
-  final user = FirebaseAuth.instance.currentUser!;
   final  date = DateFormat('MMMM d, yyyy').format(DateTime.now());
   final MarketstackService MSS = MarketstackService();
 

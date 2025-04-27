@@ -33,3 +33,11 @@ void signUserOut() async {
       (route) => false,
     );
 }
+
+String? getUserID() {
+  User? user = FirebaseAuth.instance.currentUser;
+  if(user == null){
+    throw Exception("No user currently signed in");
+  }
+  return user.uid;
+}

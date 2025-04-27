@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stockappflutter/pages/auth_page.dart';
 import 'package:stockappflutter/pages/home_page.dart'; // Import the HomePage
+import 'package:stockappflutter/pages/favorites_page.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       home: AuthPage(),
       routes: {
         '/home': (context) => HomePage(), // Define the /home route
+        '/favorites' : (context) => Favorites(),
       },
     );
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:stockappflutter/components/market_data.dart';
 import 'package:stockappflutter/components/menu_drawer.dart';
+import 'package:stockappflutter/utilities/database_utils.dart';
+
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
@@ -17,6 +19,21 @@ class StatsState extends State<Stats>{
   bool favToggle = false;
   List<bool> intervalButtonStates = List.generate(6, (index) => index == 2);
   
+  @override
+  void initState(){
+    super.initState();
+    checkFavorite();
+  }
+
+  Future<void> checkFavorite() async{
+    bool result = await isFavorite(widget.market.symbol);
+    if(mounted){
+      setState(() {
+        favToggle = result;
+      });
+    }
+  }
+
   var intervals = {
     0 : "1D",
     1 : "1W",
@@ -95,6 +112,7 @@ class StatsState extends State<Stats>{
                     setState(() {
                       favToggle = !favToggle;
                     });
+                    favToggle ? addFavorite(widget.market.name, widget.market.symbol) : removeFavorite(widget.market.symbol);
                     debugPrint('Favorites Tapped');
                   },
                   icon: Icon(
