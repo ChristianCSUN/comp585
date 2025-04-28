@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:stockappflutter/main.dart';
 import 'package:stockappflutter/utilities/auth_utils.dart';
 
-class MenuDrawer extends StatelessWidget{
+class MenuDrawer extends StatelessWidget {
   const MenuDrawer({super.key});
-  
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     List<Color> colors = [Colors.blue, Colors.purple];
     return Drawer(
       child: Container(
@@ -17,88 +17,87 @@ class MenuDrawer extends StatelessWidget{
             colors: colors,
           ),
         ),
-        child: Column(
-            children: [
-              SizedBox(height: 50),
-              CircleAvatar(
-                radius: 100,
-                backgroundColor: Colors.white,
-                child: Text("Logo Here"),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(children: [
+            const SizedBox(height: 50),
+            const CircleAvatar(
+              radius: 60,
+              backgroundImage: AssetImage('assets/WWlogo.png'), // Add your logo
+            ),
+            const Spacer(),
+            ListTile(
+              leading: const Icon(
+                Icons.home,
+                color: Colors.white,
               ),
-              Spacer(),
-              ListTile(
-                leading: Icon(
-                  Icons.home,
-                  color: Colors.white,
-                  ),
-                title: Text(
-                  "Dashboard",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: (){
-                  print("Dashboard was pressed");
-                  navigatorKey.currentState!.pushNamedAndRemoveUntil('/home',(route) => false);
-                },
+              title: const Text(
+                "Dashboard",
+                style: TextStyle(color: Colors.white),
               ),
-              Spacer(),
-              ListTile(
-                leading: Icon(
-                  Icons.star,
-                  color: Colors.white,
-                ),
-                title: Text(
-                  "Favorites",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: (){
-                  print("Favorites was pressed");
-                  navigatorKey.currentState!.pushNamed('/favorites');
-                },
+              onTap: () {
+                navigatorKey.currentState!
+                    .pushNamedAndRemoveUntil('/home', (route) => false);
+              },
+            ),
+            const Spacer(),
+            ListTile(
+              leading: const Icon(
+                Icons.star,
+                color: Colors.white,
               ),
-              Spacer(),
-              ListTile(
-                leading: Icon(
-                  Icons.newspaper,
-                  color: Colors.white,
-                ),
-                title: Text(
-                  "News Room",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: (){
-                  print("News Room was pressed");
-                },
+              title: const Text(
+                "Favorites",
+                style: TextStyle(color: Colors.white),
               ),
-              Spacer(),
-              ListTile(
-                leading: Icon(
-                  Icons.account_circle,
-                  color: Colors.white,
-                ),
-                title: Text(
-                  "Account",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: (){
-                  print("Account was pressed");
-                },
+              onTap: () {
+                navigatorKey.currentState!.pushNamed('/favorites');
+              },
+            ),
+            const Spacer(),
+            ListTile(
+              leading: const Icon(
+                Icons.newspaper,
+                color: Colors.white,
               ),
-              Spacer(),
-              ListTile(
-                leading: Icon(
-                  Icons.logout,
-                  color: Colors.white,
-                ),
-                title: Text(
-                  "Signout",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onTap: () => signUserOut(),
+              title: const Text(
+                "News Room",
+                style: TextStyle(color: Colors.white),
               ),
-              Spacer(),
-            ]
-          ),
+              onTap: () {
+                print("News Room was pressed");
+              },
+            ),
+            const Spacer(),
+            ListTile(
+              leading: const Icon(
+                Icons.account_circle,
+                color: Colors.white,
+              ),
+              title: const Text(
+                "Account",
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                navigatorKey.currentState!.pushNamed('/account_page');
+              },
+            ),
+            const Spacer(),
+            ListTile(
+              leading: const Icon(
+                Icons.logout,
+                color: Colors.white,
+              ),
+              title: const Text(
+                "Signout",
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () => signUserOut(),
+            ),
+            const Spacer(),
+          ]),
         ),
+      ),
     );
   }
 }
