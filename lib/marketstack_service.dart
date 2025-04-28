@@ -1,11 +1,19 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class MarketstackService{
   final String apiKey = "ffc563032e13963ddd9ef6343c78dcd9";
   
   Future <List<Map <String, dynamic>>> fetchPopularMarkets() async {
-    List<List<String>> marketInfo = [["GSPC.INDX", "S&P 500"],["DJI.INDX", "DOW"], ["IXIC.INDX","NASDAQ"], ["RUT.INDX","RUSSELL 2000"], ["RUI.INDX","RUSSELL 1000"]];
+    List<List<String>> marketInfo = [
+      ["GSPC.INDX", "S&P 500"],
+      ["DJI.INDX", "DOW"], 
+      ["IXIC.INDX","NASDAQ"], 
+      ["AAPL",""], 
+      ["MSFT",""]
+    ];
+
     List<Map<String, dynamic>> markets = [];
     
     for (List info in marketInfo){
@@ -39,7 +47,6 @@ class MarketstackService{
       final historicalData = await fetchHistoricalClosingData(symbol);
       List<double> graphData = historicalData[0];
       double averageVolume = calcVolumeAverage(historicalData[1]);
-      print("name.isEmpty: ${name.isEmpty}");
       if(name.isEmpty){
         name = data[0]["name"] ?? data[1]["name"] ?? "Unknown";
       }
@@ -90,6 +97,131 @@ class MarketstackService{
       }
     }else{
       throw Exception("Failed to fetch historical data for symbol $symbol");
+    }
+  }
+
+  Future <List<List<dynamic>>> fetchHistoricalClosingDataWithLimit(String symbol, int limit) async {
+    final url = Uri.parse(
+      "https://api.marketstack.com/v2/eod?access_key=$apiKey&symbols=$symbol&limit=$limit"
+    );
+    final response = await http.get(url);
+
+    if(response.statusCode == 200){
+      print("History fetch: ${response.body}"); 
+      final data = jsonDecode(response.body)["data"];
+      List<double> closeData = [];
+      List<String> dates = [];
+      List<List<dynamic>> historicalData = [];
+
+      if(data != null){
+        for (var entry in data){
+
+          closeData.add(double.tryParse(entry["close"].toString()) ?? 0.0);
+          dates.add(DateFormat('MMMMd').format(DateTime.parse(entry["date"].toString())));
+        }
+        historicalData.add(closeData.reversed.toList());
+        historicalData.add(dates.reversed.toList());
+        return historicalData;
+      }else{
+        throw Exception("No historical data found for symbol $symbol");
+      }
+    }else{
+      throw Exception("Failed to fetch historical data for symbol $symbol");
+    }
+  }
+
+  Future <List<List<dynamic>>> fetchYTDClosingData(String symbol) async {
+    String jan1 = DateFormat("yyyy-MM-dd").format(DateTime(DateTime.now().year, 1, 1));
+    String today = DateFormat("yyyy-MM-dd").format(DateTime.now());
+    final url = Uri.parse(
+      "https://api.marketstack.com/v2/eod?access_key=$apiKey&symbols=$symbol&date_from=$jan1&date_to=$today"
+    );
+    final response = await http.get(url);
+
+    if(response.statusCode == 200){
+      print("History fetch: ${response.body}"); 
+      final data = jsonDecode(response.body)["data"];
+      List<double> closeData = [];
+      List<String> dates = [];
+      List<List<dynamic>> ytdData = [];
+
+      if(data != null){
+        for (var entry in data){
+
+          closeData.add(double.tryParse(entry["close"].toString()) ?? 0.0);
+          dates.add(DateFormat('MMMMd').format(DateTime.parse(entry["date"].toString())));
+        }
+        ytdData.add(closeData.reversed.toList());
+        ytdData.add(dates.reversed.toList());
+        return ytdData;
+      }else{
+        throw Exception("No historical data found for symbol $symbol");
+      }
+    }else{
+      throw Exception("Failed to fetch historical data for symbol $symbol");
+    }
+  }
+  
+  Future <List<List<dynamic>>> fetchIntradayData(String symbol) async {
+    // gets todays date if its a weekday, and gets the past fridays date if its a weekend
+    String date = DateTime.now().weekday >= DateTime.monday && DateTime.now().weekday <= DateTime.friday 
+                ? DateFormat("yyyy-MM-dd").format(DateTime.now()) 
+                : DateFormat("yyyy-MM-dd").format(DateTime.now().subtract(Duration(days: DateTime.now().weekday - DateTime.friday)));
+    final intradayUrl = Uri.parse(
+      "https://api.marketstack.com/v2/intraday/$date?access_key=$apiKey&symbols=$symbol&interval=15min"
+    );
+    final eodUrl = Uri.parse(
+      "https://api.marketstack.com/v2/eod?access_key=$apiKey&symbols=$symbol&limit=2"
+    );
+
+    try{
+      final intradayResponse = await http.get(intradayUrl);
+      List<double> graphData = [];
+      List<String> times = [];
+      List<List<dynamic>> dayData = [];
+
+      if(intradayResponse.statusCode == 200){
+        print("intraday fetch: ${intradayResponse.body}"); 
+        final data = jsonDecode(intradayResponse.body)["data"];
+        
+        if(data != null && data.isNotEmpty){
+          for (var entry in data){
+            graphData.add(double.tryParse(entry["close"].toString()) ?? 0.0);
+            times.add(DateFormat('hh:mm a').format(DateTime.parse(entry["date"].toString())));
+          }
+          dayData.add(graphData.reversed.toList());
+          dayData.add(times.reversed.toList());
+          return dayData;
+        }
+      }
+      final eodResponse = await http.get(eodUrl);
+      if(eodResponse.statusCode == 200){
+        final eodData = jsonDecode(eodResponse.body)["data"];
+        if(eodData != null && eodData.isNotEmpty){
+           double currentClose = double.tryParse(eodData[0]["close"].toString()) ?? 0.0;
+           double previousClose = double.tryParse(eodData[1]["close"].toString()) ?? 0.0;
+           double open = double.tryParse(eodData[0]["open"].toString()) ?? 0.0;
+           double high = double.tryParse(eodData[0]["high"].toString()) ?? 0.0;
+           double low = double.tryParse(eodData[0]["low"].toString()) ?? 0.0;
+           graphData.add(currentClose);
+           graphData.add(high);
+           graphData.add(low);
+           graphData.add(open);
+           graphData.add(previousClose);
+           times.add("Current");
+           times.add("High");
+           times.add("Low");
+           times.add("Open");
+           times.add("Previous");
+           dayData.add(graphData.reversed.toList());
+           dayData.add(times.reversed.toList());
+           return dayData;
+        }
+      }
+      return [];
+    }catch(error){
+      print("Error getting graph data for 1 day: $error");
+      return[];
     }
   }
 

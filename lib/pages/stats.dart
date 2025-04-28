@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stockappflutter/components/market_data.dart';
 import 'package:stockappflutter/components/menu_drawer.dart';
+import 'package:stockappflutter/components/stats_graph.dart';
 import 'package:stockappflutter/utilities/database_utils.dart';
 
 import 'package:intl/intl.dart';
@@ -18,6 +19,7 @@ class StatsState extends State<Stats>{
   final date = DateFormat("MMMMd").format(DateTime.now());
   bool favToggle = false;
   List<bool> intervalButtonStates = List.generate(6, (index) => index == 2);
+  String activeInterval = "1M";
   
   @override
   void initState(){
@@ -36,7 +38,7 @@ class StatsState extends State<Stats>{
 
   var intervals = {
     0 : "1D",
-    1 : "1W",
+    1 : "5D",
     2 : "1M",
     3 : "6M",
     4 : "YTD",
@@ -48,6 +50,7 @@ class StatsState extends State<Stats>{
       for(int i = 0; i < intervalButtonStates.length; i++){
         intervalButtonStates[i] = i == index ? !intervalButtonStates[index] : false;
       }
+      activeInterval = intervals[index]!;
     });
     debugPrint("${intervals[index]} was pressed");
   }
@@ -234,17 +237,18 @@ class StatsState extends State<Stats>{
               endIndent: 10,
             ),
             SizedBox(
-              height: 300,
+              height: MediaQuery.of(context).size.height * 0.3,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: ColoredBox(
-                  color: Colors.red,
-                  child: Center(
-                    child: AutoSizeText("A GRAPH WILL GO HERE"),
+                padding: EdgeInsets.only(left: 10, right: 15),
+                child: Center(
+                  child: StatsGraph(
+                    interval: activeInterval, 
+                    symbol: widget.market.symbol
                   ),
                 ),
               ),
             ),
+            SizedBox(height: 10),
             Divider(
               thickness: 2,
               color: Colors.black,
