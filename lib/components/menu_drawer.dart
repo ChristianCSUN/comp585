@@ -4,7 +4,7 @@ import 'package:stockappflutter/utilities/auth_utils.dart';
 
 class MenuDrawer extends StatelessWidget{
   const MenuDrawer({super.key});
-  
+
   @override
   Widget build(BuildContext context){
     List<Color> colors = [Colors.blue, Colors.purple];
@@ -30,7 +30,7 @@ class MenuDrawer extends StatelessWidget{
                 leading: Icon(
                   Icons.home,
                   color: Colors.white,
-                  ),
+                ),
                 title: Text(
                   "Dashboard",
                   style: TextStyle(color: Colors.white),
@@ -67,6 +67,7 @@ class MenuDrawer extends StatelessWidget{
                 ),
                 onTap: (){
                   print("News Room was pressed");
+                  navigatorKey.currentState!.pushNamed('/news_page');
                 },
               ),
               Spacer(),
@@ -97,8 +98,8 @@ class MenuDrawer extends StatelessWidget{
               ),
               Spacer(),
             ]
-          ),
         ),
+      ),
     );
   }
 }

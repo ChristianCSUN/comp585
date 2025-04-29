@@ -4,6 +4,7 @@ import 'package:stockappflutter/components/menu_drawer.dart';
 import 'package:stockappflutter/components/market_card.dart';
 import 'package:stockappflutter/components/market_data.dart';
 import 'package:intl/intl.dart';
+import 'package:stockappflutter/components/search_bar.dart';
 
 
 
@@ -60,14 +61,7 @@ class _HomePageState extends State<HomePage>{
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(
-              height: 10
-            ),
-            const Align(
-              alignment: Alignment.center,
-              child: Text("SEARCH BAR GOES HERE"),
-            ),
-            const SizedBox(
-              height: 50
+                height: 10
             ),
             FutureBuilder<List<MarketData>>(
               future: _popularMarkets,
@@ -77,21 +71,31 @@ class _HomePageState extends State<HomePage>{
                 }else if (snapshot.hasError){
                   print(snapshot.error);
                   return Center(
-                    child: Text("Error: ${snapshot.error}")
+                      child: Text("Error: ${snapshot.error}")
                   );
                 }else if(snapshot.hasData){
                   final markets = snapshot.data!;
-                  return Expanded( 
-                    child: ListView.builder(
-                      itemCount: markets.length,
-                      itemBuilder: (context, index){
-                        final market = markets[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                          child: MarketCard(market: market),
-                        );
-                      },
-                    ),
+                  return Expanded(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
+                            child: SearchBarWidget(markets: markets, onChanged: (query){debugPrint("Search query: $query");},),
+                          ),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: markets.length,
+                              itemBuilder: (context, index){
+                                final market = markets[index];
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                                  child: MarketCard(market: market),
+                                );
+                              },
+                            ),
+                          )
+                        ],
+                      )
                   );
                 }else{
                   return const Center(child: Text("No market data Available."));
