@@ -21,9 +21,8 @@ class MenuDrawer extends StatelessWidget{
             children: [
               SizedBox(height: 50),
               CircleAvatar(
-                radius: 100,
-                backgroundColor: Colors.white,
-                child: Text("Logo Here"),
+                radius: 60,
+                backgroundImage: AssetImage('lib/assets/WWlogo.png'),
               ),
               Spacer(),
               ListTile(
@@ -82,6 +81,7 @@ class MenuDrawer extends StatelessWidget{
                 ),
                 onTap: (){
                   print("Account was pressed");
+                  navigatorKey.currentState!.pushNamed('/account_page');
                 },
               ),
               Spacer(),
