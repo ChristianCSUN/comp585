@@ -67,6 +67,7 @@ class MenuDrawer extends StatelessWidget{
                 ),
                 onTap: (){
                   print("News Room was pressed");
+                  navigatorKey.currentState!.pushNamed('/news_page');
                 },
               ),
               Spacer(),
