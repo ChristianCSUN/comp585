@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage>{
                       child: Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15),
                             child: SearchBarWidget(markets: markets, onChanged: (query){debugPrint("Search query: $query");},),
                           ),
                           Expanded(

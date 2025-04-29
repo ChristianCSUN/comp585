@@ -60,48 +60,52 @@ class MarketCardState extends State<MarketCard> {
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: SizedBox(
-                width: 400,
-                height: 100,
+                width: MediaQuery.of(context).size.width *.9, //400,
+                height: MediaQuery.of(context).size.height *.1,//100,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        AutoSizeText(
-                          widget.market.name,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                          maxFontSize: 20,
-                          minFontSize: 10,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        AutoSizeText(
-                          widget.market.symbol,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                    Flexible(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AutoSizeText(
+                            widget.market.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                             maxFontSize: 20,
                             minFontSize: 10,
-                            maxLines: 2,
+                            maxLines: 3,
                             overflow: TextOverflow.ellipsis,
-                        ),
-                      ]
-                    ),
-                    SizedBox(width: 25),
-                    SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: CustomPaint(
-                        painter: MiniGraphPainter(widget.market.graphData),
+                            wrapWords: true,
+                          ),
+                          AutoSizeText(
+                            widget.market.symbol,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                              maxFontSize: 20,
+                              minFontSize: 10,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                          ),
+                        ]
                       ),
                     ),
-                    SizedBox(width: 25),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: CustomPaint(
+                          painter: MiniGraphPainter(widget.market.graphData),
+                        ),
+                      ),
+                    ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,

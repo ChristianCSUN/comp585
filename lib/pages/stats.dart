@@ -84,9 +84,9 @@ class StatsState extends State<Stats>{
                children: [
                 AutoSizeText(
                   "${marketDetails[0]["value"]} (${marketDetails[1]["value"]})",
-                  style: TextStyle(fontSize: 20),
+                  //style: TextStyle(fontSize: 20),
                   maxFontSize: 40,
-                  minFontSize: 10,
+                  minFontSize: 20,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -127,8 +127,9 @@ class StatsState extends State<Stats>{
                     label: const AutoSizeText(
                       "Favorite",
                       style: TextStyle(
-                        fontSize: 20,
                         color: Colors.black),
+                        maxFontSize: 30,
+                        minFontSize: 15,
                     ),
                     iconAlignment: IconAlignment.start,
                     style: OutlinedButton.styleFrom(
@@ -160,9 +161,8 @@ class StatsState extends State<Stats>{
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [ 
                           AutoSizeText(
-                            marketDetails[2]["label"]!,
+                            "${marketDetails[2]["label"]!}:",
                             style: TextStyle(
-                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
                             maxFontSize: 12,
@@ -171,7 +171,6 @@ class StatsState extends State<Stats>{
                           AutoSizeText(
                             "\$${marketDetails[2]["value"]}",
                             style: TextStyle(
-                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                             maxFontSize: 20,
@@ -185,16 +184,14 @@ class StatsState extends State<Stats>{
                           AutoSizeText(
                             "Price Change:",
                             style: TextStyle(
-                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
-                            maxFontSize: 12,
-                            minFontSize: 10,
+                           maxFontSize: 12,
+                           minFontSize: 10,
                           ),
                           AutoSizeText(
                             priceChange > 0 ? "+${(priceChange).toStringAsFixed(2)}" :  (priceChange).toStringAsFixed(2),
                             style: TextStyle(
-                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: priceChange > 0 ? Colors.green[700] : Colors.red,
                             ),
@@ -206,9 +203,8 @@ class StatsState extends State<Stats>{
                       Column(
                         children: [
                           AutoSizeText(
-                            marketDetails[3]["label"]!,
+                            "${marketDetails[3]["label"]}:"!,
                             style: TextStyle(
-                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
                             maxFontSize: 12,
@@ -217,7 +213,6 @@ class StatsState extends State<Stats>{
                           AutoSizeText(
                             widget.market.percentageChange > 0 ? "(+${marketDetails[3]["value"]}%)" :  "(${marketDetails[3]["value"]}%)",
                             style: TextStyle(
-                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: widget.market.percentageChange > 0 ? Colors.green[700] : Colors.red,
                               backgroundColor: widget.market.percentageChange > 0 ? Colors.green[100] : Colors.red[100]
@@ -283,11 +278,13 @@ class StatsState extends State<Stats>{
                 indent: 10,
                 endIndent: 10,
               ),
-              SizedBox(
-                height: 200,
+              ConstrainedBox(
+                constraints: BoxConstraints(minHeight: 0),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child:ListView.builder( 
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: 6,
                     itemBuilder: (context, index){
                       final item = marketDetails[index + 4];
@@ -297,19 +294,15 @@ class StatsState extends State<Stats>{
                           AutoSizeText(
                             "${item["label"]!}:",
                             style: TextStyle(
-                              fontSize: 22,
                               fontWeight: FontWeight.bold,
                               ),
-                            maxFontSize: 30,
-                            minFontSize: 10,
+                            maxFontSize: 40,
+                            minFontSize: 15,
                           ),
                           AutoSizeText(
                             item["value"]!,
-                            style: TextStyle(
-                              fontSize: 22,
-                              ),
-                            maxFontSize: 30,
-                            minFontSize: 10,
+                            maxFontSize: 40,
+                            minFontSize: 15,
                           ),
                         ],
                       );
