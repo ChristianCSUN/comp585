@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => HomePage(), // Define the /home route
         '/favorites' : (context) => Favorites(),
+        '/news_page' : (context) => NewsPage(),
       },
     );
   }
