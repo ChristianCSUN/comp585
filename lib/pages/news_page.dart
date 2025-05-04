@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:stockappflutter/components/menu_drawer.dart';
 import 'package:stockappflutter/components/news_article_model.dart';
 import 'package:stockappflutter/components/news_data.dart';
+import 'package:stockappflutter/pages/single_news_story_page.dart';
 
 class NewsPage extends StatefulWidget {
   const NewsPage({super.key});
@@ -66,6 +67,7 @@ class _NewsPageState extends State<NewsPage> {
               imageUrl: articles[index].urlToImage,
               title: articles[index].title,
               desc: articles[index].description,
+              url: articles[index].url,
             );
           },
         ),
@@ -75,34 +77,53 @@ class _NewsPageState extends State<NewsPage> {
 }
 
 class ArticleTile extends StatelessWidget {
-  final String imageUrl, title, desc;
-  const ArticleTile({super.key, required this.imageUrl, required this.title, required this.desc});
+  final String imageUrl, title, desc, url;
+  const ArticleTile({super.key, required this.imageUrl, required this.title, required this.desc, required this.url});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 20),
-      child: Column(
-        children: <Widget>[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: CachedNetworkImage(imageUrl: imageUrl),
-          ),
-          SizedBox(height: 8,),
-          Text(
-            title, style: TextStyle(
-              fontSize: 16,
-              color: Colors.black87,
-              fontWeight: FontWeight.w500
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(
+            builder: (context) => SingleNewsStoryPage(
+                storyUrl: url)
+        ));
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 20),
+        decoration: const BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.grey,
+              width: 1.0,
             ),
           ),
-          SizedBox(height: 2),
-          Text(desc, style: TextStyle(
-            fontSize: 12,
-            color: Colors.black54
-          ),)
-        ]
-      )
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Column(
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: CachedNetworkImage(imageUrl: imageUrl),
+              ),
+              SizedBox(height: 8,),
+              Text(
+                title, style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w500
+                ),
+              ),
+              SizedBox(height: 2),
+              Text(desc, style: TextStyle(
+                fontSize: 12,
+                color: Colors.black54
+              ),)
+            ]
+          ),
+        )
+      ),
     );
   }
 }
