@@ -3,7 +3,9 @@ import 'package:stockappflutter/components/menu_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AccountPage extends StatefulWidget {
-  const AccountPage({super.key});
+  final Function(bool) toggleTheme;
+
+  const AccountPage({super.key, required this.toggleTheme});
 
   @override
   State<AccountPage> createState() => _AccountPageState();
@@ -106,6 +108,7 @@ class _AccountPageState extends State<AccountPage> {
                       setState(() {
                         isDarkTheme = value; // Toggle theme state
                       });
+                      widget.toggleTheme(value); // Toggle app theme
                       _showThemeSnackBar(value); // Show SnackBar
                     },
                   ),

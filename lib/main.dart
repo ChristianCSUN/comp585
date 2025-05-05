@@ -17,20 +17,36 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeMode _themeMode = ThemeMode.light;
+
+  void toggleTheme(bool isDarkMode) {
+    setState(() {
+      _themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: _themeMode,
       home: AuthPage(),
       routes: {
-        '/home': (context) => HomePage(), // Define the /home route
-        '/favorites' : (context) => Favorites(),
-        '/news_page' : (context) => NewsPage(),
-        '/account_page': (context) => AccountPage(),
+        '/home': (context) => HomePage(),
+        '/favorites': (context) => Favorites(),
+        '/news_page': (context) => NewsPage(),
+        '/account_page': (context) => AccountPage(toggleTheme: toggleTheme),
       },
     );
   }
