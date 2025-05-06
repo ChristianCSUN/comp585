@@ -8,8 +8,8 @@ class MarketstackService{
   Future <List<Map <String, dynamic>>> fetchPopularMarkets() async {
     List<List<String>> marketInfo = [
       ["GSPC.INDX", "S&P 500"],
-      ["DJI.INDX", "DOW"], 
-      ["IXIC.INDX","NASDAQ"], 
+      ["DJI.INDX", "Dow Jones Industrial Average"], 
+      ["IXIC.INDX","NASDAQ Composite"], 
       ["AAPL",""], 
       ["MSFT",""]
     ];

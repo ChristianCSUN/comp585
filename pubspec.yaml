@@ -35,3 +35,4 @@ flutter:
   assets:
     - lib/assets/WWlogo.png
     - lib/assets/WWprofile.png
+    - lib/assets/tickers.txt
